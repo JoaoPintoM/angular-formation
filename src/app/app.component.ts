@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-// import { PeopleServiceService } from './people-service.service';
+import { PeopleServiceService } from './people-service.service';
 import { Product } from './models/product';
+import { ProductService } from './services/product.service';
+import { CustomerService } from './services/customer.service';
 
 @Component({
   selector: 'app-root',
@@ -13,19 +15,22 @@ export class AppComponent implements OnInit {
   total: number = 0;
   products: Product[];
 
-  constructor() {
-    this.products = new Array<Product>();
-    this.products.push(new Product('Fist One', 'lala blabla', 'http://placehold.it/800x500', 3));
-    this.products.push(new Product('Second hand', 'OHOOHOa', 'http://placehold.it/800x500', 6));
-    this.products.push(new Product('Destructor', 'petite description', 'http://placehold.it/800x500', 10));
-    this.products.push(new Product('Hello', 'lalla oblabho lorem', 'http://placehold.it/800x500', 69))
+  constructor(
+      public productService: ProductService,
+      public customerService: CustomerService) {
   }
 
   ngOnInit() {
-    console.log('init');
+    this.products = this.productService.getProducts();
+  }
+
+  isAvailable(product: Product) {
+    return this.productService.isAvailable(product.title);
   }
 
   addToBasket(product: Product) {
-    this.total += product.price;
+    this.customerService.addProduct(product);
+    this.productService.decreaseStock(product.title);
+    this.total = this.customerService.getTotal();
   }
 }

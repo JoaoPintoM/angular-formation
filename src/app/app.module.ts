@@ -8,7 +8,9 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MenuComponent } from './menu/menu.component';
 import { ProductComponentComponent } from './product-component/product-component.component';
-// import { PeopleServiceService } from './people-service.service';
+import { PeopleServiceService } from './people-service.service';
+import { ProductService } from './services/product.service';
+import { CustomerService } from './services/customer.service';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,7 @@ import { ProductComponentComponent } from './product-component/product-component
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [ProductService, CustomerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

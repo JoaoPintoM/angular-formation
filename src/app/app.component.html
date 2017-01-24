@@ -18,11 +18,13 @@
 
 
      <div class="row text-center">
-       <div *ngFor="let product of products" class="col-md-3 col-sm-6 hero-feature">
+       <div *ngFor="let product of products; let i = index">
+         <div class="col-md-3 col-sm-6 hero-feature" *ngIf="isAvailable(product)">
          <app-product-component
             [product]=product
             (addToBasket)="addToBasket($event)">
           </app-product-component>
+        </div>
        </div>
      </div>
 
