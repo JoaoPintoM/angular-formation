@@ -13,15 +13,21 @@ export class AppComponent implements OnInit {
   title = 'app works!';
   people = [];
   total: number = 0;
-  products: Product[];
+  products: Product[] = [];
 
   constructor(
       public productService: ProductService,
       public customerService: CustomerService) {
+
+      this.getTotalCall();
   }
 
   ngOnInit() {
-    this.products = this.productService.getProducts();
+    this.productService
+          .getProducts()
+          .subscribe((p) => {
+            this.products = p;
+          });
   }
 
   isAvailable(product: Product) {
@@ -29,8 +35,25 @@ export class AppComponent implements OnInit {
   }
 
   addToBasket(product: Product) {
-    this.customerService.addProduct(product);
-    this.productService.decreaseStock(product.title);
-    this.total = this.customerService.getTotal();
+    // this.customerService.addProduct(product);
+
+    this.customerService
+          .addProduct(product)
+          .subscribe((p) => {
+            this.getTotalCall();
+            this.productService.decreaseStock(product.title);
+          });
+
+
+    // this.total = this.customerService.getTotal();
+  }
+
+  getTotalCall() {
+    this.customerService.getTotal()
+        .subscribe(t => this.total = t);
+  }
+
+  getTotal() {
+    return this.total;
   }
 }

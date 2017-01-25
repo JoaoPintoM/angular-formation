@@ -1,21 +1,29 @@
 import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
+import { UpperCasePipe } from '@angular/common';
 import { Product } from '../models/product';
+import { Observable } from 'rxjs';
+import 'rxjs';
 
 @Injectable()
 export class ProductService {
 
-  products: Product[];
+  products: Product[] = [];
+  private API_URL: string = 'http://localhost:8080/rest/products';
 
-  constructor() {
-    this.products = new Array<Product>();
-    this.products.push(new Product('Fist One', 'lala blabla', 'http://placehold.it/800x500', 3, 3));
-    this.products.push(new Product('Second hand', 'OHOOHOa', 'http://placehold.it/800x500', 6, 2));
-    this.products.push(new Product('Destructor', 'petite description', 'http://placehold.it/800x500', 10, 4));
-    this.products.push(new Product('Hello', 'lalla oblabho lorem', 'http://placehold.it/800x500', 69, 1 ))
+  constructor(public uppercase: UpperCasePipe, private http: Http) {
   }
 
-  getProducts() {
-    return this.products;
+  getProducts() : Observable<Product[]> {
+    return this.http.get(this.API_URL)
+               .map((r: Response) => r.json() as Product[])
+               .map(productList => {
+                 return productList.map(p => {
+                   p.title = this.uppercase.transform(p.title)
+                   return p;
+                 })
+               })
+               .do(p => this.products = p);
   }
 
   private findProduct(productTitle: string): Product {
