@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import { Product } from '../models/product';
+import { Customer } from '../models/customer';
 import { Observable } from 'rxjs';
 import 'rxjs';
 
@@ -42,6 +43,13 @@ export class CustomerService {
                .map((r: Response) => r.json() as Product[])
   }
 
+
+  checkout(customer: Customer) {
+    return this.http.post(this.API_URL + '/confirm', customer)
+                .do(customer => {
+                  console.log(customer);
+                });
+  }
 
 
 }
